@@ -1,0 +1,2 @@
+import temp
+temp.main()
