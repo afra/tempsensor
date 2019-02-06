@@ -74,4 +74,3 @@ def main():
             deepsleep()
     except:
         deepsleep()
-
