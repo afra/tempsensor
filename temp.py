@@ -35,7 +35,7 @@ def connect_wifi(timeout):
         sleep(1)
     return sta_if
 
-def read_sensor(client):
+def read_sensor():
     sensor = dht.DHT22(machine.Pin(5))
     sensor.measure()
     result = {
@@ -66,7 +66,7 @@ def main():
             if not wifi.isconnected():
                 deepsleep()
             mqtt = connect_mqtt(MQTT_SERVER, SENSOR_NAME)
-            result = read_sensor(mqtt)
+            result = read_sensor()
             print("Read sensor %s" % result)
             mqtt.publish("afra.sensors", bytes(result, 'utf-8'))
             mqtt.disconnect()
