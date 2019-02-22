@@ -2,6 +2,7 @@ import esp
 import machine
 import network
 import dht
+from bme280 import BME280
 import ujson as json
 from utime import sleep
 
@@ -35,7 +36,7 @@ def connect_wifi(timeout):
         sleep(1)
     return sta_if
 
-def read_sensor():
+def read_dht():
     sensor = dht.DHT22(machine.Pin(5))
     sensor.measure()
     result = {
@@ -45,6 +46,22 @@ def read_sensor():
             "humidity": sensor.humidity(),
             },
         "measuretime": MEASURE_TIME,
+        }
+    return json.dumps(result)
+
+def format_bme280(bme):
+    temp, pressure, _hum = bme.read_compensated_data()
+
+    temp = temp / 100
+    hpa = (pressure // 256) / 100
+
+    result = {
+        "name": "afra-t2",
+        "data": {
+            "temp": temp,
+            "pressure": hpa
+            },
+        "measuretime": 60 * 5,
         }
     return json.dumps(result)
 
@@ -66,9 +83,17 @@ def main():
             if not wifi.isconnected():
                 deepsleep()
             mqtt = connect_mqtt(MQTT_SERVER, SENSOR_NAME)
-            result = read_sensor()
-            print("Read sensor %s" % result)
-            mqtt.publish("afra.sensors", bytes(result, 'utf-8'))
+
+            dhtjson = read_dht()
+
+            i2c = machine.I2C(scl=machine.Pin(4), sda=machine.Pin(12))
+            bme = BME280(i2c=i2c)
+            bmejson = format_bme280(bme)
+
+            print("Read dht %s" % dhtjson)
+            print("Read bme %s" % bmejson)
+            mqtt.publish("afra.sensors", bytes(dhtjson, 'utf-8'))
+            mqtt.publish("afra.sensors", bytes(bmejson, 'utf-8'))
             mqtt.disconnect()
             wifi.disonnect()
             deepsleep()
