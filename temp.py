@@ -66,8 +66,9 @@ def format_bme280(bme):
     return json.dumps(result)
 
 def deepsleep():
-    print("Goint to deepsleep in 10 sec")
-    sleep(10)
+    for i in range(10):
+        print("Going to deepsleep in %d sec" % (10 - i))
+        sleep(1)
     rtc = machine.RTC()
     rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
 
