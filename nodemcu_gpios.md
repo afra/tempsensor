@@ -4,11 +4,11 @@ The cable between D0 <> RST is required for the **deep-sleep**.V
 | ----------- | ----- | ---------- |
 | 0           | D3    |            |
 | 2           | D4    | *(also Led1 but inverse)* |
-| 4           | D2    |            |
+| 4           | D2    | BME280 SCL |
 | 5           | D1    | DHT22 data pin |
 | 9           | D2    |            |
 | 10          | D3    |            |
-| 12          | D6    |            |
+| 12          | D6    | BME280 SDA |
 | 13          | D7    |            |
 | 14          | D5    |            |
 | 15          | D8    |            |
