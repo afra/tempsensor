@@ -37,7 +37,7 @@ def connect_wifi(timeout):
     return sta_if
 
 def read_dht():
-    sensor = dht.DHT22(machine.Pin(5))
+    sensor = dht.DHT22(machine.Pin(26))
     sensor.measure()
     result = {
         "name": SENSOR_NAME,
@@ -86,7 +86,7 @@ def main():
 
             dhtjson = read_dht()
 
-            i2c = machine.I2C(scl=machine.Pin(4), sda=machine.Pin(12))
+            i2c = machine.I2C(scl=machine.Pin(22), sda=machine.Pin(21))
             bme = BME280(i2c=i2c)
             bmejson = format_bme280(bme)
 
