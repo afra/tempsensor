@@ -10,7 +10,7 @@ from umqtt.simple import MQTTClient
 
 # https://github.com/micropython/micropython-lib/blob/master/umqtt.simple/example_pub_button.py
 
-MQTT_SERVER = "172.28.0.1"
+MQTT_SERVER = "10.254.0.1"
 SENSOR_NAME = "afra-t1"
 
 # how often it should be measured. Every x seconds
