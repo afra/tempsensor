@@ -96,7 +96,7 @@ def main():
             mqtt.publish("afra.sensors", bytes(dhtjson, 'utf-8'))
             mqtt.publish("afra.sensors", bytes(bmejson, 'utf-8'))
             mqtt.disconnect()
-            wifi.disonnect()
+            wifi.disconnect()
             deepsleep()
     except:
         deepsleep()
