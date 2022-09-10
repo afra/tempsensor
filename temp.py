@@ -75,13 +75,7 @@ def format_bme280(bme):
 def deepsleep():
     print("Goint to deepsleep in 10 sec")
     sleep(10)
-    rtc = machine.RTC()
-    rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
-
-    # set RTC.ALARM0 to fire after 10 seconds (waking the device)
-    rtc.alarm(rtc.ALARM0, (MEASURE_TIME - 10) * 1000)
-
-    machine.deepsleep()
+    machine.deepsleep((MEASURE_TIME - 10) * 1000)
 
 def main():
     try:
