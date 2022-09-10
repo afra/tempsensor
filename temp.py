@@ -12,6 +12,13 @@ from umqtt.simple import MQTTClient
 
 MQTT_SERVER = "10.254.0.1"
 SENSOR_NAME = "afra-t1"
+DHT_TOPIC = "afra-t1"
+BME_TOPIC = "afra-t2"
+
+
+GPIO_DHT = 26
+GPIO_SCL = 22
+GPIO_SDA = 21
 
 # how often it should be measured. Every x seconds
 MEASURE_TIME = 5 * 60
@@ -37,10 +44,10 @@ def connect_wifi(timeout):
     return sta_if
 
 def read_dht():
-    sensor = dht.DHT22(machine.Pin(26))
+    sensor = dht.DHT22(machine.Pin(GPIO_DHT))
     sensor.measure()
     result = {
-        "name": SENSOR_NAME,
+        "name": DHT_TOPIC,
         "data": {
             "temp": sensor.temperature(),
             "humidity": sensor.humidity(),
@@ -56,7 +63,7 @@ def format_bme280(bme):
     hpa = (pressure // 256) / 100
 
     result = {
-        "name": "afra-t2",
+        "name": BME_TOPIC,
         "data": {
             "temp": temp,
             "pressure": hpa
@@ -86,7 +93,7 @@ def main():
 
             dhtjson = read_dht()
 
-            i2c = machine.I2C(scl=machine.Pin(22), sda=machine.Pin(21))
+            i2c = machine.I2C(scl=GPIO_SCL, sda=GPIO_SDA)
             bme = BME280(i2c=i2c)
             bmejson = format_bme280(bme)
 
