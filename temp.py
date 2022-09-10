@@ -5,10 +5,7 @@ import dht
 from bme280 import BME280
 import ujson as json
 from utime import sleep
-
 from umqtt.simple import MQTTClient
-
-# https://github.com/micropython/micropython-lib/blob/master/umqtt.simple/example_pub_button.py
 
 MQTT_SERVER = "10.254.0.1"
 SENSOR_NAME = "afra-t1"
@@ -80,23 +77,29 @@ def deepsleep():
 def main():
     try:
         while True:
+            print("Connecting to Wifi")
             wifi = connect_wifi(timeout=10)
             if not wifi.isconnected():
+                print("Can't connect to wifi")
                 deepsleep()
+            print("Connecting to MQTT")
             mqtt = connect_mqtt(MQTT_SERVER, SENSOR_NAME)
 
             dhtjson = read_dht()
+            print("Read dht %s" % dhtjson)
 
             i2c = machine.SoftI2C(scl=machine.Pin(GPIO_SCL), sda=machine.Pin(GPIO_SDA))
             bme = BME280(i2c=i2c)
             bmejson = format_bme280(bme)
-
-            print("Read dht %s" % dhtjson)
             print("Read bme %s" % bmejson)
+
+            print("Publishing to mqtt")
             mqtt.publish("afra.sensors", bytes(dhtjson, 'utf-8'))
             mqtt.publish("afra.sensors", bytes(bmejson, 'utf-8'))
             mqtt.disconnect()
             wifi.disconnect()
+            print("Successful cycle, going into deepsleep")
             deepsleep()
-    except:
+    except Exception as exp:
+        print("Exception occured %s" % exp)
         deepsleep()
