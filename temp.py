@@ -93,7 +93,7 @@ def main():
 
             dhtjson = read_dht()
 
-            i2c = machine.I2C(scl=GPIO_SCL, sda=GPIO_SDA)
+            i2c = machine.SoftI2C(scl=machine.Pin(GPIO_SCL), sda=machine.Pin(GPIO_SDA))
             bme = BME280(i2c=i2c)
             bmejson = format_bme280(bme)
 
